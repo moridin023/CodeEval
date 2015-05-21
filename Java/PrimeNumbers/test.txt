@@ -1,0 +1,7 @@
+100000000
+
+
+NEED TO TEST
+primes give you all primes to the square of the next prime
+
+e.g. 7 gives you all the primes to 11^2
