@@ -1,47 +1,89 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 
-void getPrimes(int max)
+typedef struct 
 {
-	if(max < 2)
+	int *array;
+	size_t used;
+	size_t size;
+} Array;
+
+void initArray(Array *a, size_t initialSize)
+{
+	a->array = (int *)malloc(initialSize * sizeof(int));
+	a->used = 0;
+	a->size = initialSize;
+}
+
+void insertArray(Array *a, int element)
+{
+	if(a->used == a->size)
 	{
-		//return an empty array
+		a->size *= 2;
+		a->array = (int *)realloc(a->array, a->size * sizeof(int));
 	}
+	a->array[a->used++] = element;
+}
 
-	//add 2 to the base array as the first entry
+void freeArray(Array *a)
+{
+	free(a->array);
+	a->array = NULL;
+	a->used = a->size = 0;
+}
 
-	for(int i = 3; i <= max; i += 2)
+void getPrimes(int max, Array *primes)
+{
+	//array is null if input is less than 2
+	if(max >= 2)
 	{
-		//get the sqrt of 'i' value
+		insertArray(primes, 2);
 
-		//replace somelegth with the length of the array that is storing the values in
-		for(int j = 0; j < somelength; j++)
+		for(int i = 3; i < max; i += 2)
 		{
-			//pull out the Jth element from the array
+			double maxDivisor = sqrt(i);
 
-			if(divisor > maxDivisor)
+			for(int j = 0; j < primes->used; j++)
 			{
-				//add 'i' value to storage array
-				break;
-			}
+				int divisor = primes->array[j];
 
-			if((i%divisor) == 0)
-			{
-				break;
+				if(divisor > maxDivisor)
+				{
+					insertArray(primes, i);
+					break;
+				}
+
+				if((i%divisor) == 0)
+				{
+					break;
+				}
 			}
 		}
 	}
-
-	//possibly return array or just end if using pointers
 }
 
 void processLine(char line[])
 {
 	int max;
+	Array primes;
+	initArray(&primes, 10);
+
 	sscanf(line, "%d", &max);
 
-	getPrimes(max);
+	getPrimes(max, &primes);
 
-	//somehow print out the list of primes
+	if(primes.used > 0)
+	{
+		printf("%d", primes.array[0]);
+
+		for(int i = 1; i < primes.used; i++)
+		{
+			printf(",%d", primes.array[i]);
+		}
+
+		printf("\n");
+	}
 }
 
 int main(int argc, const char * argv[]) 
