@@ -84,6 +84,8 @@ void processLine(char line[])
 
 		printf("\n");
 	}
+
+	freeArray(&primes);
 }
 
 int main(int argc, const char * argv[]) 
